@@ -2,7 +2,10 @@ import EVENT_PERIOD from '../constant/EventPeriod';
 import MENU from '../constant/Menu';
 
 const GIFT_EVENT_PRICE = 120000;
-const GIFT_EVENT_BENEFIT = MENU.find(({ name }) => name === '샴페인').price;
+const GIFT_EVENT_BENEFIT = {
+  ...MENU.find(({ name }) => name === '샴페인'),
+  count: 1,
+};
 const SPECIAL_DISCOUNT_PRICE = 1000;
 const IS_CANDIDATES = {
   giftEvent: orderPrice => orderPrice >= GIFT_EVENT_PRICE,
@@ -37,7 +40,11 @@ class BenefitCalculator {
 
   #calculateGiftEventBenefit() {
     if (this.#totalOrderPrice >= GIFT_EVENT_PRICE) {
-      this.#benefits.push({ name: '증정 이벤트', price: GIFT_EVENT_BENEFIT });
+      this.#benefits.push({
+        name: '증정 이벤트',
+        price: GIFT_EVENT_BENEFIT.price,
+        present: `${GIFT_EVENT_BENEFIT.name} ${GIFT_EVENT_BENEFIT.count}개`,
+      });
     }
   }
 
