@@ -26,14 +26,14 @@ const OutputView = {
     if (benefits.length === 0) {
       Console.print('없음');
     } else {
-      benefits.forEach(benefit => {
-        Console.print(`${benefit.name}: -${benefit.price.toLocaleString()}원`);
+      benefits.forEach(({ name, price }) => {
+        Console.print(`${name}: -${price.toLocaleString()}원`);
       });
     }
   },
   printTotalBenefitPrice(price) {
     Console.print('\n<총혜택 금액>');
-    Console.print(`-${price.toLocaleString()}원`);
+    Console.print(`${price === 0 ? 0 : `-${price.toLocaleString()}`}원`);
   },
   printOrderPriceAfterDiscount(price) {
     Console.print('\n<할인 후 예상 결제 금액>');
