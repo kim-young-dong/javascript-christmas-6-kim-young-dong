@@ -55,12 +55,12 @@ const MENU = [
   {
     name: '레드와인',
     type: 'drink',
-    price: 3000,
+    price: 60000,
   },
   {
     name: '샴페인',
     type: 'drink',
-    price: 3000,
+    price: 25000,
   },
 ];
 
