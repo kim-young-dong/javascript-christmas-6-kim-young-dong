@@ -7,7 +7,7 @@ import MENU from './constant/Menu';
 
 class App {
   #date;
-  #menus;
+  #orderMenus;
   #totalOrderPrice;
   #benefits;
 
@@ -33,36 +33,22 @@ class App {
     }
   }
 
-  #calculateOrderPriceBeforeDiscount() {
-    const orderedMenus = MENU.filter(menu => this.#menus.find(({ name }) => name === menu.name));
-    const totalOrderPrice = orderedMenus.reduce(
-      (acc, cur) => acc + cur.price * this.#menus.find(({ name }) => name === cur.name).count,
-      0
-    );
+  #calculateTotalOrderPrice() {
+    const orderedMenus = this.#orderMenus.map(menu => ({
+      ...menu,
+      ...MENU.find(({ name }) => name === menu.name),
+    }));
+    const totalOrderPrice = orderedMenus.reduce((acc, cur) => acc + cur.price * cur.count, 0);
     return totalOrderPrice;
   }
 
   #calculateBenefits() {
-    const calculator = new BenefitCalculator(this.#date, this.#menus, this.#totalOrderPrice);
+    const calculator = new BenefitCalculator(this.#date, this.#orderMenus, this.#totalOrderPrice);
     this.#benefits = calculator.run();
   }
 
-  #outPutBenefits() {
-    const hasGiftEvent = this.#benefits.find(({ name }) => name === '증정 이벤트');
-    OutputView.printGiftMenu(!!hasGiftEvent);
-    OutputView.printDetailedBenefit(this.#benefits);
-  }
-
-  #calculteTotalBenefitPrice() {
-    return this.#benefits.reduce((acc, { price }) => acc + price, 0);
-  }
-
-  #calculateOrderPriceAfterDiscount() {
-    return this.#calculateOrderPriceBeforeDiscount() - this.#calculteTotalBenefitPrice();
-  }
-
   #calculateEventBadge() {
-    const totalBenefitPrice = this.#calculteTotalBenefitPrice();
+    const totalBenefitPrice = this.#benefits.reduce((acc, { price }) => acc + price, 0);
     if (totalBenefitPrice >= 20000) {
       return '산타';
     }
@@ -75,17 +61,34 @@ class App {
     return '없음';
   }
 
-  async run() {
+  async #userInput() {
     this.#date = await this.#inputDate();
-    this.#menus = await this.#inputOrder();
-    OutputView.printMenu(this.#menus);
-    this.#totalOrderPrice = this.#calculateOrderPriceBeforeDiscount();
-    OutputView.printOrderPriceBeforeDiscount(this.#totalOrderPrice);
+    const orderedMenus = await this.#inputOrder();
+    this.#orderMenus = orderedMenus.map(menu => ({
+      ...menu,
+      ...MENU.find(({ name }) => name === menu.name),
+    }));
+    this.#totalOrderPrice = this.#orderMenus.reduce((acc, cur) => acc + cur.price * cur.count, 0);
+  }
+
+  #outputMessage() {
+    const giftPresented = this.#benefits.find(({ name }) => name === '증정 이벤트')?.present;
+    const totalBenefitPrice = this.#benefits.reduce((acc, { price }) => acc + price, 0);
+    const orderPriceAfterDiscount = this.#totalOrderPrice - totalBenefitPrice;
+    const eventBadge = this.#calculateEventBadge();
+    OutputView.printMenu(this.#orderMenus);
+    OutputView.printTotalOrderPrice(this.#totalOrderPrice);
+    OutputView.printGiftMenu(giftPresented);
+    OutputView.printDetailedBenefit(this.#benefits);
+    OutputView.printTotalBenefitPrice(totalBenefitPrice);
+    OutputView.printOrderPriceAfterDiscount(orderPriceAfterDiscount);
+    OutputView.printEventBadge(eventBadge);
+  }
+
+  async run() {
+    await this.#userInput();
     this.#calculateBenefits();
-    this.#outPutBenefits();
-    OutputView.printTotalBenefitPrice(this.#calculteTotalBenefitPrice());
-    OutputView.printOrderPriceAfterDiscount(this.#calculateOrderPriceAfterDiscount());
-    OutputView.printEventBadge(this.#calculateEventBadge());
+    this.#outputMessage();
   }
 }
 

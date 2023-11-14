@@ -13,13 +13,13 @@ const OutputView = {
       Console.print(`${menu.name} ${menu.count}개`);
     });
   },
-  printOrderPriceBeforeDiscount(price) {
+  printTotalOrderPrice(price) {
     Console.print('\n<할인 전 총주문 금액>');
     Console.print(`${price.toLocaleString()}원`);
   },
   printGiftMenu(giftPresented) {
     Console.print('\n<증정 메뉴>');
-    Console.print(`${giftPresented ? '샴페인 1개' : '없음'}`);
+    Console.print(`${giftPresented || '없음'}`);
   },
   printDetailedBenefit(benefits) {
     Console.print('\n<혜택 내역>');
