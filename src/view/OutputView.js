@@ -10,12 +10,12 @@ const OutputView = {
   printMenu(menus) {
     Console.print('\n<주문 메뉴>');
     menus.forEach(menu => {
-      Console.print(`${menu.name} - ${menu.count}개`);
+      Console.print(`${menu.name} ${menu.count}개`);
     });
   },
   printOrderPriceBeforeDiscount(price) {
     Console.print('\n<할인 전 총주문 금액>');
-    Console.print(`${price}원`);
+    Console.print(`${price.toLocaleString()}원`);
   },
   printGiftMenu(giftPresented) {
     Console.print('\n<증정 메뉴>');
@@ -43,8 +43,8 @@ const OutputView = {
     Console.print('\n<12월 이벤트 배지>');
     Console.print(`${badge}`);
   },
-  printError(error) {
-    Console.print(error.message);
+  printError(message) {
+    Console.print(message);
   },
 };
 
