@@ -33,15 +33,6 @@ class App {
     }
   }
 
-  #calculateTotalOrderPrice() {
-    const orderedMenus = this.#orderMenus.map(menu => ({
-      ...menu,
-      ...MENU.find(({ name }) => name === menu.name),
-    }));
-    const totalOrderPrice = orderedMenus.reduce((acc, cur) => acc + cur.price * cur.count, 0);
-    return totalOrderPrice;
-  }
-
   #calculateBenefits() {
     const calculator = new BenefitCalculator(this.#date, this.#orderMenus, this.#totalOrderPrice);
     this.#benefits = calculator.run();
@@ -86,7 +77,9 @@ class App {
   }
 
   async run() {
+    OutputView.printWellcome();
     await this.#userInput();
+    OutputView.printPreview(this.#date);
     this.#calculateBenefits();
     this.#outputMessage();
   }
