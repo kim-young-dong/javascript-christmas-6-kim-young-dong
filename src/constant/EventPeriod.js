@@ -1,10 +1,10 @@
 const EVENT_PERIOD = {
   eventStart: 1,
-  DdayEnd: 25,
+  DdayEventEnd: 25,
   otherEventEnd: 31,
   DdayDiscount() {
     const period = [];
-    for (let date = this.eventStart; date <= this.DdayEnd; date += 1) {
+    for (let date = this.eventStart; date <= this.DdayEventEnd; date += 1) {
       period.push(date);
     }
     return period;
