@@ -67,6 +67,36 @@ describe('기능 테스트', () => {
 
     expectLogContains(getOutput(logSpy), expected);
   });
+
+  test('혜택 금액이 5000원 이상시 별 뱃지 부여', async () => {
+    // given
+    const logSpy = getLogSpy();
+    mockQuestions(['25', '타파스-1,바비큐립-1,초코케이크-2,제로콜라-1']);
+
+    // when
+    const app = new App();
+    await app.run();
+
+    // then
+    const expected = ['<12월 이벤트 배지>' + LINE_SEPARATOR + '별'];
+
+    expectLogContains(getOutput(logSpy), expected);
+  });
+
+  test('혜택 금액이 10000원 이상시 트리 뱃지 부여', async () => {
+    // given
+    const logSpy = getLogSpy();
+    mockQuestions(['26', '타파스-1,초코케이크-5,제로콜라-1']);
+
+    // when
+    const app = new App();
+    await app.run();
+
+    // then
+    const expected = ['<12월 이벤트 배지>' + LINE_SEPARATOR + '트리'];
+
+    expectLogContains(getOutput(logSpy), expected);
+  });
 });
 
 describe('예외 테스트', () => {
